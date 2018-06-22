@@ -1,0 +1,38 @@
+var b = require('bonescript');
+
+var led = "P8_13"; //GPIO pin assign
+var state = 0;
+var ontime = 1000; //user variable
+var offtime = 500; //user variable
+
+var onCount = 0; //counter for ON cycle
+var offCount = 0; //counter for OFF cycle
+
+b.pinMode(led, 'out');
+toggleLED = function() {
+state = state ? 0 : 1;
+b.digitalWrite(led, state);
+
+clearInterval(timer);
+
+if (state == 1)
+{
+onCount++;
+timer = setInterval (toggleLED, ontime);
+}
+else {
+offCount++;
+timer = setInterval (toggleLED, offtime);
+}
+
+process.stdout.write("count ON: " + onCount + " OFF: " + offCount + "\r");
+// console.log('count ON: %d OFF: %d', onCount, offCount);
+};
+
+timer = setInterval(toggleLED, 500);
+
+stopTimer = function() {
+clearInterval(timer);
+};
+
+setTimeout(stopTimer, 129600000); //timer to set total ON and OFF active duration
